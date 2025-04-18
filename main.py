@@ -25,11 +25,17 @@ def main() -> None:
                 )
 
             guild_data = players_info[player].get("guild")
+
             if guild_data and guild_data.get("name"):
                 Guild.objects.get_or_create(
                     name=guild_data["name"],
                     defaults={"description": guild_data.get("description", "")}
                 )
+
+            if guild_data and guild_data.get("name"):
+                guild = Guild.objects.filter(name=guild_data["name"]).first()
+            else:
+                guild = None
 
             Player.objects.create(
                 nickname=player,
@@ -38,9 +44,7 @@ def main() -> None:
                 race=Race.objects.get(
                     name=players_info[player]["race"]["name"]
                 ),
-                guild=Guild.objects.filter(
-                    name=guild_data["name"]
-                    if guild_data else None).first(),
+                guild=guild
             )
 
 
